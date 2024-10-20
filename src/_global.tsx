@@ -1,0 +1,10 @@
+export const connecting = require("./assets/connecting.png");
+export const file = require("./assets/file.png");
+export const group = require("./assets/group.png");
+export const home = require("./assets/home.png");
+export const launch = require("./assets/launch.png");
+export const pointer = require("./assets/pointer.png");
+export const product = require("./assets/product.png");
+export const satellite = require("./assets/satellite.png");
+export const flask = require("./assets/flask.png");
+export const profile = require("./assets/profile.png");

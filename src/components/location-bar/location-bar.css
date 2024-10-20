@@ -1,0 +1,7 @@
+.lb-input {
+  font-size: 10px;
+  height: 12px;
+  padding-inline: 3px;
+  width: 420px;
+  background-color: var(--white);
+}

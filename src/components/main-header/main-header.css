@@ -1,0 +1,9 @@
+.main-header {
+  display: flex;
+  background-color: var(--gray);
+}
+
+.mh-nav-button-list {
+  display: flex;
+  padding: 3px;
+}

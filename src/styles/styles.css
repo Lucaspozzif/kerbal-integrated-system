@@ -10,6 +10,11 @@
   src: local("Tiny5"), url("./tiny5/tiny5-regular.ttf") format("truetype");
 }
 
+html {
+  background-color: var(--gray);
+  height: 100%;
+}
+
 p,
 label {
   font-family: "Tiny5";
@@ -42,4 +47,43 @@ form {
 
 .long {
   min-width: 50px;
+}
+.editable {
+  background-color: var(--white);
+}
+
+.size0 {
+  width: 30px;
+}
+
+.size1 {
+  width: 60px;
+}
+
+.size2 {
+  width: 90px;
+}
+
+.size3 {
+  width: 180px;
+}
+
+/* All form styles */
+.ft-inputs {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 1px;
+  width: 100%;
+  padding: 3px;
+}
+
+.ft-sheet {
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fts-line {
+  display: flex;
 }

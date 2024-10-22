@@ -87,3 +87,7 @@ form {
 .fts-line {
   display: flex;
 }
+.ft-button-list{
+  padding: 3px;
+  display: flex;
+}

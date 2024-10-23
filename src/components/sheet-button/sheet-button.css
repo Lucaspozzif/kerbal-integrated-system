@@ -1,0 +1,15 @@
+.sheet-button {
+  height: 10px;
+  width: 10px;
+  border: 1px solid var(--black);
+  background: var(--gray);
+  box-shadow: 1px 1px 0px 0px var(--darkGray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sb-image {
+  height: 9px;
+  width: 9px;
+}

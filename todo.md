@@ -4,6 +4,9 @@ Lista de atividades pendentes no desenvolvimento
 
 ## Frontend
 
+- Transformar a planilha em um componente
+    A planilha no momento é escrita diretamente sobre o código, o que torna este muito mais extenso do que precisa ser. Uma vez transformada em planilha a leitura do código ficaria mais organizada, sem falar na remoção da chance de não conformidades
+
 ### Modules Page
 ### Yard Page
 ### Team Page

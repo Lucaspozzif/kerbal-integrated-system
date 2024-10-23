@@ -29,9 +29,10 @@ export class Module {
     private upgrades: number[];
     private documents: number[];
 
-    constructor() {
-
-    }
+  constructor(data?: any) {
+    if (!data) return;
+    this.populate(data);
+  }
 
     private getAll() {
         return {
@@ -52,22 +53,53 @@ export class Module {
             lifeSupport: this.lifeSupport,
             dockingPorts: this.dockingPorts,
 
-            construction: this.construction,
-            reconditioning: this.reconditioning,
-            upgrades: this.upgrades,
-            documents: this.documents,
-        }
-    }
+      construction: this.construction,
+      reconditioning: this.reconditioning,
+      upgrades: this.upgrades,
+      documents: this.documents,
+    };
+  }
 
-    async downloadModule(id?: string) {
-        const downloadId = id || this.id
-        if (!downloadId) return
+  private populate(data: any) {
+    this.name = data.name;
+    this.alias = data.alias;
+    this.long = data.long;
+    this.type = data.type;
+    this.status = data.status;
+    this.mass = data.mass;
+    this.height = data.height;
+    this.width = data.width;
+    this.depth = data.depth;
+    this.parts = data.parts;
+    this.crewCap = data.crewCap;
+    this.commRange = data.commRange;
+    this.lifeSupport = data.lifeSupport;
+    this.dockingPorts = data.dockingPorts;
+    this.construction = data.construction;
+    this.reconditioning = data.reconditioning;
+    this.upgrades = data.upgrades;
+    this.documents = data.documents;
+  }
 
-        const docRef = doc(db, "modules", id.toString());
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.data()) return;
+  public async downloadModule(id?: string) {
+    const downloadId = id || this.id;
+    if (!downloadId) return;
 
-        console.log(docSnap.data());
+    const docRef = doc(db, "modules", id.toString());
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.data()) return;
 
-    }
+    this.populate(docSnap.data());
+    this.id = docSnap.id;
+  }
+
+  public get(attribute: "id" | "name" | "alias" | "long" | "type" | "status" | "mass" | "height" | "width" | "depth" | "parts" | "crewCap" | "commRange" | "lifeSupport" | "dockingPorts" | "construction" | "reconditioning" | "upgrades" | "documents") {
+    return (this as any)[attribute];
+  }
+
+  public set(attribute: "id" | "name" | "alias" | "long" | "type" | "status" | "mass" | "height" | "width" | "depth" | "parts" | "crewCap" | "commRange" | "lifeSupport" | "dockingPorts" | "construction" | "reconditioning" | "upgrades" | "documents", newValue: any, setter?: React.Dispatch<React.SetStateAction<Module>>) {
+    if (attribute == "id") return;
+    (this as any)[attribute] = newValue;
+    if (setter) setter(new Module(this.getAll()));
+  }
 }

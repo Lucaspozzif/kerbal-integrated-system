@@ -1,4 +1,11 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export class Database {
@@ -37,6 +44,20 @@ export class Database {
     this.data = data.data;
   }
 
+  public async downloadAll() {
+    const col = collection(db, "databases");
+    const q = query(col);
+
+    const data: any = {};
+    const querySnap = await getDocs(q);
+    querySnap.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      data[doc.id] = doc.data();
+
+      console.log(doc.id, doc.data());
+    });
+  }
+
   public async download(name?: string) {
     const downloadId = name || this.name;
     if (!downloadId) return;
@@ -50,7 +71,7 @@ export class Database {
   }
 
   public async upload() {
-    console.log(this)
+    console.log(this);
     if (this.name == "") return;
 
     const docRef = doc(db, "databases", this.name);

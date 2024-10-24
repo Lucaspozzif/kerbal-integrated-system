@@ -48,14 +48,15 @@ export class Database {
     const col = collection(db, "databases");
     const q = query(col);
 
-    const data: any = {};
+    const data: any[] = [];
     const querySnap = await getDocs(q);
     querySnap.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      data[doc.id] = doc.data();
-
-      console.log(doc.id, doc.data());
+      
+      const tempDb = new Database(doc.data())
+      tempDb.set('name',doc.id)
+      data.push(tempDb)
     });
+    return data;
   }
 
   public async download(name?: string) {

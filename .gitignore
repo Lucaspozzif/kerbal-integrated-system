@@ -90,3 +90,6 @@ typings/
 
 # Electron-Forge
 out/
+
+# Firebase-config
+src/system/firebase/firebase-config.json

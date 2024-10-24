@@ -2,12 +2,14 @@ import { useState } from "react";
 import { LocalHeader } from "../../../components/local-header/local-header";
 import { TextInput } from "../../../components/text-input/text-input";
 import { IconButton } from "../../../components/icon-button/icon-button";
-import { printIcon } from "../../../_global";
-import { exportIcon } from "../../../_global";
-import { importIcon } from "../../../_global";
+import { printIcon, importIcon, exportIcon } from "../../../_global";
+import { Module } from "../../../system/classes/module";
 
 export function ModulesForm() {
   const [tab, setTab] = useState("basic-data");
+  const [module, setter] = useState(new Module());
+
+  console.log(module);
 
   const tabHandler = () => {
     switch (tab) {
@@ -16,22 +18,21 @@ export function ModulesForm() {
           <div className='form-tab'>
             <div className='ft-inputs'>
               <p className='ft-label'>Id:</p>
-              <TextInput readOnly={true} size={0} />
-
+              <TextInput readOnly={true} size={0} value={module.get("id")} />
               <p className='ft-label'>Name:</p>
-              <TextInput size={2} />
+              <TextInput size={2} value={module.get("name")} onChange={(e) => module.set("name", e.target.value, setter)} />
 
               <p className='ft-label'>Alias:</p>
-              <TextInput size={2} />
+              <TextInput size={2} value={module.get("alias")} onChange={(e) => module.set("alias", e.target.value, setter)} />
 
               <p className='ft-label'>Long:</p>
-              <TextInput size={3} />
+              <TextInput size={3} value={module.get("long")} onChange={(e) => module.set("long", e.target.value, setter)} />
 
               <p className='ft-label'>Type:</p>
-              <TextInput readOnly={true} size={2} />
+              <TextInput readOnly={true} size={2} value={module.get("type")} />
 
               <p className='ft-label'>Status:</p>
-              <TextInput readOnly={true} size={2} />
+              <TextInput readOnly={true} size={2} value={module.get("status")} />
             </div>
           </div>
         );
@@ -40,31 +41,32 @@ export function ModulesForm() {
           <div className='form-tab'>
             <div className='ft-inputs'>
               <p className='ft-label'>Mass:</p>
-              <TextInput size={1} />
+              <TextInput size={1} value={module.get("mass")} onChange={(e) => module.set("mass", e.target.value, setter)} />
 
               <p className='ft-label'>Height:</p>
-              <TextInput size={1} />
+              <TextInput size={1} value={module.get("height")} onChange={(e) => module.set("height", e.target.value, setter)} />
 
               <p className='ft-label'>Width:</p>
-              <TextInput size={1} />
+              <TextInput size={1} value={module.get("width")} onChange={(e) => module.set("width", e.target.value, setter)} />
 
               <p className='ft-label'>Depth:</p>
-              <TextInput size={1} />
+              <TextInput size={1} value={module.get("depth")} onChange={(e) => module.set("depth", e.target.value, setter)} />
             </div>
           </div>
         );
       case "operations":
+        console.log(module.get('dockingPorts'))
         return (
           <div className='form-tab'>
             <div className='ft-inputs'>
               <p className='ft-label'>Crew capacity:</p>
-              <TextInput size={0} />
+              <TextInput size={0} value={module.get("crewCap")} onChange={(e) => module.set("crewCap", e.target.value, setter)} />
 
               <p className='ft-label'>Comm. Range:</p>
-              <TextInput size={0} />
+              <TextInput size={0} value={module.get("commRange")} onChange={(e) => module.set("commRange", e.target.value, setter)} />
 
               <p className='ft-label'>Life Sup.:</p>
-              <TextInput size={0} />
+              <TextInput size={0} value={module.get("lifeSupport")} onChange={(e) => module.set("lifeSupport", e.target.value, setter)} />
             </div>
             <div className='ft-sheet'>
               <div className='fts-line'>

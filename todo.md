@@ -4,8 +4,15 @@ Lista de atividades pendentes no desenvolvimento
 
 ## Frontend
 
+- Tela de loading
+- Suporte às listas de dados
 - Transformar a planilha em um componente
     A planilha no momento é escrita diretamente sobre o código, o que torna este muito mais extenso do que precisa ser. Uma vez transformada em planilha a leitura do código ficaria mais organizada, sem falar na remoção da chance de não conformidades
+
+## Backend
+- Convocadores da lista de dados (métodos para chamar "módulos", no plural, talvez seja até melhor uma classe para isso)
+- Os counters são criados antes do database, solicitar a criação do db antes de iniciar a preenchê-lo, evitando assim a sobrecarga de armazenamento de counters sem conteúdo, ou talvez a criação de counters temporários, talvez cadastrados no ID da pessoa ou no timestamp. Assim que o DB for salvo, converter as informações do counter temporário para o counter permanente, também podemos excluir o counter de timestamp após uma semana ou 24 horas, algo assim.
+
 
 ### Modules Page
 ### Yard Page

@@ -11,44 +11,59 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
-export class Module {
-  // Basic Data
+export class Mission {
   private id: string;
   private name: string;
   private alias: string;
   private long: string;
   private type: number;
   private status: number;
-
-  // Operations
-  private crewCap: number;
-  private dockingPorts: {
-    id: string;
-    qty: number;
-    using: number;
-  }[];
-  private commRange: string;
-  private lifeSupport: string;
-
-  // Finances
-  private construction: number;
-  private reconditioning: number;
-
-  // Relations
-  private parentModules: string[];
-  private childModules: string[];
-  private missions: string[];
-
-  // Documents
-  private upgrades: {
-    name: string;
-    long: string;
-    type: string;
-    previousConstruction: number;
-    previousReconditioning: number;
-    documents: string[];
+  private start: {
+    year: number;
+    day: number;
+    hour: number;
+    minute: number;
   };
-  private documents: number[];
+  private conclusion: {
+    year: number;
+    day: number;
+    hour: number;
+    minute: number;
+  };
+  private speculatedDuration: {
+    year: number;
+    day: number;
+    hour: number;
+    minute: number;
+  };
+  private modules: string[];
+  private parentMissions: string[];
+  private childMissions: string[];
+  private tripulation: string[];
+  private science: {
+    experiment: string;
+    body: string;
+    biome: string;
+    condition: string;
+  };
+  private incomes: {
+    id: string;
+    type: string;
+    description: string;
+    value: string;
+  };
+  private expenses: {
+    id: string;
+    type: string;
+    description: string;
+    value: string;
+  };
+  private deviations: {
+    type: string;
+    description: string;
+    consequence: string;
+  };
+  private documents: string[];
 
   private created: any;
   private lastUpdate: any;
@@ -67,16 +82,17 @@ export class Module {
     this.long = data.long;
     this.type = data.type;
     this.status = data.status;
-    this.crewCap = data.crewCap;
-    this.dockingPorts = data.dockingPorts;
-    this.commRange = data.commRange;
-    this.lifeSupport = data.lifeSupport;
-    this.construction = data.construction;
-    this.reconditioning = data.reconditioning;
-    this.parentModules = data.parentModules;
-    this.childModules = data.childModules;
-    this.missions = data.missions;
-    this.upgrades = data.upgrades;
+    this.start = data.start;
+    this.conclusion = data.conclusion;
+    this.speculatedDuration = data.speculatedDuration;
+    this.modules = data.modules;
+    this.parentMissions = data.parentMissions;
+    this.childMissions = data.childMissions;
+    this.tripulation = data.tripulation;
+    this.science = data.science;
+    this.incomes = data.incomes;
+    this.expenses = data.expenses;
+    this.deviations = data.deviations;
     this.documents = data.documents;
     this.created = data.created;
     this.lastUpdate = data.lastUpdate;
@@ -90,16 +106,17 @@ export class Module {
       long: this.long,
       type: this.type,
       status: this.status,
-      crewCap: this.crewCap,
-      dockingPorts: this.dockingPorts,
-      commRange: this.commRange,
-      lifeSupport: this.lifeSupport,
-      construction: this.construction,
-      reconditioning: this.reconditioning,
-      parentModules: this.parentModules,
-      childModules: this.childModules,
-      missions: this.missions,
-      upgrades: this.upgrades,
+      start: this.start,
+      conclusion: this.conclusion,
+      speculatedDuration: this.speculatedDuration,
+      modules: this.modules,
+      parentMissions: this.parentMissions,
+      childMissions: this.childMissions,
+      tripulation: this.tripulation,
+      science: this.science,
+      incomes: this.incomes,
+      expenses: this.expenses,
+      deviations: this.deviations,
       documents: this.documents,
       created: this.created,
       lastUpdate: this.lastUpdate,
@@ -108,7 +125,7 @@ export class Module {
 
   // Database Methods
   public async downloadInterval(from: any, to: any) {
-    const col = collection(db, "modules");
+    const col = collection(db, "missions");
     const q = query(
       col,
       where("lastUpdate", ">", from),
@@ -118,7 +135,7 @@ export class Module {
     const data: any[] = [];
     const querySnap = await getDocs(q);
     querySnap.forEach((doc) => {
-      const snap = new Module(doc.data());
+      const snap = new Mission(doc.data());
       snap.set("id", doc.id);
       data.push(snap);
     });
@@ -128,7 +145,7 @@ export class Module {
     const downloadId = id || this.id;
     if (!downloadId || downloadId == "") return;
 
-    const docRef = doc(db, "modules", downloadId);
+    const docRef = doc(db, "missions", downloadId);
     const docSnap = await getDoc(docRef);
     if (!docSnap.data()) return;
 
@@ -142,14 +159,14 @@ export class Module {
     if (!this.created) this.created = serverTimestamp();
     this.lastUpdate = serverTimestamp();
 
-    const docRef = doc(db, "modules", this.id);
+    const docRef = doc(db, "missions", this.id);
     await setDoc(docRef, this.getAll());
   }
 
   public async delete() {
     if (!this.id || this.id == "") return;
 
-    const docRef = doc(db, "modules", this.id);
+    const docRef = doc(db, "missions", this.id);
     await deleteDoc(docRef);
   }
 
@@ -181,16 +198,17 @@ export class Module {
       | "long"
       | "type"
       | "status"
-      | "crewCap"
-      | "dockingPorts"
-      | "commRange"
-      | "lifeSupport"
-      | "construction"
-      | "reconditioning"
-      | "parentModules"
-      | "childModules"
-      | "missions"
-      | "upgrades"
+      | "start"
+      | "conclusion"
+      | "speculatedDuration"
+      | "modules"
+      | "parentMissions"
+      | "childMissions"
+      | "tripulation"
+      | "science"
+      | "incomes"
+      | "expenses"
+      | "deviations"
       | "documents"
       | "created"
       | "lastUpdate"
@@ -206,21 +224,22 @@ export class Module {
       | "long"
       | "type"
       | "status"
-      | "crewCap"
-      | "dockingPorts"
-      | "commRange"
-      | "lifeSupport"
-      | "construction"
-      | "reconditioning"
-      | "parentModules"
-      | "childModules"
-      | "missions"
-      | "upgrades"
+      | "start"
+      | "conclusion"
+      | "speculatedDuration"
+      | "modules"
+      | "parentMissions"
+      | "childMissions"
+      | "tripulation"
+      | "science"
+      | "incomes"
+      | "expenses"
+      | "deviations"
       | "documents",
     newValue: any,
-    setter?: React.Dispatch<React.SetStateAction<Module>>
+    setter?: React.Dispatch<React.SetStateAction<Mission>>
   ) {
     (this as any)[attribute] = newValue;
-    if (setter) setter(new Module(this.getAll()));
+    if (setter) setter(new Mission(this.getAll()));
   }
 }

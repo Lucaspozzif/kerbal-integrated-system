@@ -11,45 +11,18 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
-export class Module {
-  // Basic Data
+export class Yard {
   private id: string;
   private name: string;
-  private alias: string;
-  private long: string;
-  private type: number;
   private status: number;
-
-  // Operations
-  private crewCap: number;
-  private dockingPorts: {
-    id: string;
-    qty: number;
-    using: number;
-  }[];
-  private commRange: string;
-  private lifeSupport: string;
-
-  // Finances
-  private construction: number;
-  private reconditioning: number;
-
-  // Relations
-  private parentModules: string[];
-  private childModules: string[];
+  private module: string;
   private missions: string[];
-
-  // Documents
-  private upgrades: {
-    name: string;
-    long: string;
+  private deviations: {
     type: string;
-    previousConstruction: number;
-    previousReconditioning: number;
-    documents: string[];
-  };
-  private documents: number[];
-
+    description: string;
+    consequence: string;
+  }[];
+  private documents: string[];
   private created: any;
   private lastUpdate: any;
 
@@ -63,20 +36,10 @@ export class Module {
   private populate(data: any) {
     this.id = data.id;
     this.name = data.name;
-    this.alias = data.alias;
-    this.long = data.long;
-    this.type = data.type;
     this.status = data.status;
-    this.crewCap = data.crewCap;
-    this.dockingPorts = data.dockingPorts;
-    this.commRange = data.commRange;
-    this.lifeSupport = data.lifeSupport;
-    this.construction = data.construction;
-    this.reconditioning = data.reconditioning;
-    this.parentModules = data.parentModules;
-    this.childModules = data.childModules;
+    this.module = data.module;
     this.missions = data.missions;
-    this.upgrades = data.upgrades;
+    this.deviations = data.deviations;
     this.documents = data.documents;
     this.created = data.created;
     this.lastUpdate = data.lastUpdate;
@@ -86,20 +49,10 @@ export class Module {
     return {
       id: this.id,
       name: this.name,
-      alias: this.alias,
-      long: this.long,
-      type: this.type,
       status: this.status,
-      crewCap: this.crewCap,
-      dockingPorts: this.dockingPorts,
-      commRange: this.commRange,
-      lifeSupport: this.lifeSupport,
-      construction: this.construction,
-      reconditioning: this.reconditioning,
-      parentModules: this.parentModules,
-      childModules: this.childModules,
+      module: this.module,
       missions: this.missions,
-      upgrades: this.upgrades,
+      deviations: this.deviations,
       documents: this.documents,
       created: this.created,
       lastUpdate: this.lastUpdate,
@@ -108,7 +61,7 @@ export class Module {
 
   // Database Methods
   public async downloadInterval(from: any, to: any) {
-    const col = collection(db, "modules");
+    const col = collection(db, "yards");
     const q = query(
       col,
       where("lastUpdate", ">", from),
@@ -118,7 +71,7 @@ export class Module {
     const data: any[] = [];
     const querySnap = await getDocs(q);
     querySnap.forEach((doc) => {
-      const snap = new Module(doc.data());
+      const snap = new Yard(doc.data());
       snap.set("id", doc.id);
       data.push(snap);
     });
@@ -128,7 +81,7 @@ export class Module {
     const downloadId = id || this.id;
     if (!downloadId || downloadId == "") return;
 
-    const docRef = doc(db, "modules", downloadId);
+    const docRef = doc(db, "yards", downloadId);
     const docSnap = await getDoc(docRef);
     if (!docSnap.data()) return;
 
@@ -142,14 +95,14 @@ export class Module {
     if (!this.created) this.created = serverTimestamp();
     this.lastUpdate = serverTimestamp();
 
-    const docRef = doc(db, "modules", this.id);
+    const docRef = doc(db, "yards", this.id);
     await setDoc(docRef, this.getAll());
   }
 
   public async delete() {
     if (!this.id || this.id == "") return;
 
-    const docRef = doc(db, "modules", this.id);
+    const docRef = doc(db, "yards", this.id);
     await deleteDoc(docRef);
   }
 
@@ -177,20 +130,10 @@ export class Module {
     attribute:
       | "id"
       | "name"
-      | "alias"
-      | "long"
-      | "type"
       | "status"
-      | "crewCap"
-      | "dockingPorts"
-      | "commRange"
-      | "lifeSupport"
-      | "construction"
-      | "reconditioning"
-      | "parentModules"
-      | "childModules"
+      | "module"
       | "missions"
-      | "upgrades"
+      | "deviations"
       | "documents"
       | "created"
       | "lastUpdate"
@@ -202,25 +145,15 @@ export class Module {
     attribute:
       | "id"
       | "name"
-      | "alias"
-      | "long"
-      | "type"
       | "status"
-      | "crewCap"
-      | "dockingPorts"
-      | "commRange"
-      | "lifeSupport"
-      | "construction"
-      | "reconditioning"
-      | "parentModules"
-      | "childModules"
+      | "module"
       | "missions"
-      | "upgrades"
+      | "deviations"
       | "documents",
     newValue: any,
-    setter?: React.Dispatch<React.SetStateAction<Module>>
+    setter?: React.Dispatch<React.SetStateAction<Yard>>
   ) {
     (this as any)[attribute] = newValue;
-    if (setter) setter(new Module(this.getAll()));
+    if (setter) setter(new Yard(this.getAll()));
   }
 }

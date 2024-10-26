@@ -1,14 +1,4 @@
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  serverTimestamp,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export class Document {
@@ -19,11 +9,11 @@ export class Document {
   private status: number;
   private files: {
     id: string;
+    groupId: string;
     name: string;
     description: string;
     version: string;
     uploaded: string;
-    file: any;
   }[];
 
   private created: any;
@@ -63,11 +53,7 @@ export class Document {
   // Database Methods
   public async downloadInterval(from: any, to: any) {
     const col = collection(db, "documents");
-    const q = query(
-      col,
-      where("lastUpdate", ">", from),
-      where("lastUpdate", "<", to)
-    );
+    const q = query(col, where("lastUpdate", ">", from), where("lastUpdate", "<", to));
 
     const data: any[] = [];
     const querySnap = await getDocs(q);
@@ -116,9 +102,7 @@ export class Document {
     if (!data[database]) {
       data[database] = "0".repeat(slots);
     }
-    const updatedId = (parseInt(data[database]) + 1)
-      .toString()
-      .padStart(slots, "0");
+    const updatedId = (parseInt(data[database]) + 1).toString().padStart(slots, "0");
 
     data[database] = updatedId;
     await setDoc(docRef, data);
@@ -126,27 +110,37 @@ export class Document {
     return updatedId;
   }
 
+  public async downloadFile(fileId: string) {}
+
+  public async uploadFile(fileId: string) {}
+
+  public async exportFile(fileId: string) {}
+  
+  public async importFile(fileId: string) {}
+
   // Setters and Getters
-  public get(
-    attribute:
-      | "id"
-      | "name"
-      | "long"
-      | "type"
-      | "status"
-      | "files"
-      | "created"
-      | "lastUpdate"
-  ) {
+  public get(attribute: "id" | "name" | "long" | "type" | "status" | "files" | "created" | "lastUpdate") {
     return (this as any)[attribute];
   }
 
-  public set(
-    attribute: "id" | "name" | "alias" | "long" | "type" | "status" | "files",
-    newValue: any,
-    setter?: React.Dispatch<React.SetStateAction<Document>>
-  ) {
+  public set(attribute: "id" | "name" | "alias" | "long" | "type" | "status" | "files", newValue: any, setter?: React.Dispatch<React.SetStateAction<Document>>) {
     (this as any)[attribute] = newValue;
     if (setter) setter(new Document(this.getAll()));
+  }
+
+  // Other methods
+  /**
+   *  @returns an array of IDs corresponding to the last version files
+   */
+  public lastVersionIds() {
+    const lastFilesMap = new Map<string, { id: string; uploaded: string }>();
+
+    this.files.forEach((file) => {
+      if (!lastFilesMap.has(file.name) || new Date(file.uploaded) > new Date(lastFilesMap.get(file.name)!.uploaded)) {
+        lastFilesMap.set(file.name, { id: file.id, uploaded: file.uploaded });
+      }
+    });
+
+    return Array.from(lastFilesMap.values()).map((file) => file.id);
   }
 }

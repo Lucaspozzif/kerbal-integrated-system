@@ -9,16 +9,7 @@ export function Database() {
   const [list, setList] = useState([]);
   const database = new Db();
 
-  useEffect(() => {
-    const fetch = async () => {
-      setLoading(true);
-      const newList = await database.downloadAll();
-      setList(newList);
-      setLoading(false);
-    };
-
-    fetch()
-  }, []);
+  
   console.log(list)
 
   return (

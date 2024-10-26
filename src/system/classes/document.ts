@@ -5,8 +5,6 @@ export class Document {
   private id: string;
   private name: string;
   private long: string;
-  private type: number;
-  private status: number;
   private files: {
     id: string;
     groupId: string;
@@ -30,8 +28,6 @@ export class Document {
     this.id = data.id;
     this.name = data.name;
     this.long = data.long;
-    this.type = data.type;
-    this.status = data.status;
     this.files = data.files;
     this.created = data.created;
     this.lastUpdate = data.lastUpdate;
@@ -42,8 +38,6 @@ export class Document {
       id: this.id,
       name: this.name,
       long: this.long,
-      type: this.type,
-      status: this.status,
       files: this.files,
       created: this.created,
       lastUpdate: this.lastUpdate,
@@ -119,11 +113,11 @@ export class Document {
   public async importFile(fileId: string) {}
 
   // Setters and Getters
-  public get(attribute: "id" | "name" | "long" | "type" | "status" | "files" | "created" | "lastUpdate") {
+  public get(attribute: "id" | "name" | "long" | "files" | "created" | "lastUpdate") {
     return (this as any)[attribute];
   }
 
-  public set(attribute: "id" | "name" | "alias" | "long" | "type" | "status" | "files", newValue: any, setter?: React.Dispatch<React.SetStateAction<Document>>) {
+  public set(attribute: "id" | "name" | "alias" | "long" | "files", newValue: any, setter?: React.Dispatch<React.SetStateAction<Document>>) {
     (this as any)[attribute] = newValue;
     if (setter) setter(new Document(this.getAll()));
   }

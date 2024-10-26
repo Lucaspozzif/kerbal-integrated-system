@@ -69,6 +69,8 @@ export class Document {
       snap.set("id", doc.id);
       data.push(snap);
     });
+
+    return data;
   }
 
   public async download(id?: string) {
@@ -86,9 +88,8 @@ export class Document {
   public async upload() {
     if (!this.id || this.id == "") return;
 
-    if (!this.created) this.created = serverTimestamp();
-    this.lastUpdate = serverTimestamp();
-
+    if (!this.created) this.created = Date.now();
+    this.lastUpdate = Date.now();
     const docRef = doc(db, "documents", this.id);
     await setDoc(docRef, this.getAll());
   }

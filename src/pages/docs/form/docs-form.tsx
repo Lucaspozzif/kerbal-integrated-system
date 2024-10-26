@@ -1,4 +1,4 @@
-import { useEffect, useState, version } from "react";
+import { useEffect, useState } from "react";
 import { LocalHeader } from "../../../components/local-header/local-header";
 import { TextInput } from "../../../components/text-input/text-input";
 import { exportIcon, edit, importIcon } from "../../../_global";
@@ -17,12 +17,10 @@ export function DocsForm() {
   const [fileMode, setfileMode] = useState("display");
 
   const [selectedGroup, setSelectedGroup] = useState("");
+  const [tempFiles, setTempFiles] = useState<any>({});
 
   const { id } = useParams();
   const location: any = useLocation();
-  const navigate = useNavigate();
-
-  const tempFiles = [];
 
   useEffect(() => {
     const fetch = async () => {
@@ -188,24 +186,34 @@ export function DocsForm() {
                       size={3}
                       value={file.description}
                       onChange={(e) => {
-                        const updatedFiles = document.get("files").forEach((file: any) => {
-                          if (file.id.startsWith("$")) file.description = e.target.value;
-                        });
-                        document.set("files", updatedFiles, setter);
+                        // Find the index of the file with the matching ID
+                        const index = document.get("files").findIndex((fileIn: any) => fileIn.id === file.id);
+
+                        if (index !== -1) {
+                          // Update the description of the matched file
+                          const updatedFiles = [...document.get("files")]; // Clone the array to avoid mutation
+                          updatedFiles[index].description = e.target.value;
+
+                          // Set the updated files back into the document
+                          document.set("files", updatedFiles, setter);
+                        }
                       }}
                     />
                     {file.id.startsWith("$") ? (
-                      <SheetButton
+                      <input
+                        className='sheet-button'
                         src={importIcon}
-                        onClick={() => {
-                          document.importFile(/**Placeholder */ "");
+                        type='file'
+                        onChange={(e) => {
+                          const doc = e.target.files[0];
+                          setTempFiles((prevFiles: any) => ({ ...prevFiles, [file.id]: doc }));
                         }}
                       />
                     ) : (
                       <SheetButton
                         src={exportIcon}
                         onClick={() => {
-                          document.exportFile(/**Placeholder */ "");
+                          document.downloadFile(file.id);
                         }}
                       />
                     )}
@@ -218,12 +226,12 @@ export function DocsForm() {
                   onClick={() => {
                     const updatedFiles = document.get("files");
                     updatedFiles.push({
-                      id: `$${serverTimestamp()}`,
+                      id: `$${Date.now()}`,
                       groupId: selectedGroup,
-                      name: "",
+                      name: files[0].name,
                       description: "",
                       version: (parseInt(lastVersion) + 1).toString().padStart(2, "0"),
-                      uploaded: "",
+                      uploaded: `${Date.now()}`,
                     });
                     document.set("files", updatedFiles, setter);
                   }}
@@ -272,16 +280,47 @@ export function DocsForm() {
             title: "Save",
             onClick: async () => {
               setLoading(true);
-              document.get("files").forEach(async (file: any) => {
-                if (id.startsWith("$")) {
-                  file.id = await document.generateId("files", 4);
-                  file.uploaded = serverTimestamp();
+              if (!document.get("files")) {
+                document.set("files", [], setter);
+              }
+
+              // Group files by their current groupId
+              const groupedFiles = new Map<string, any[]>();
+
+              document.get("files").forEach((file: any) => {
+                if (!groupedFiles.has(file.groupId)) {
+                  groupedFiles.set(file.groupId, []);
                 }
+                groupedFiles.get(file.groupId)!.push(file);
               });
+
+              // Iterate over each group and generate a new groupId only once per group
+              for (const [groupId, files] of groupedFiles.entries()) {
+                let newGroupId = groupId;
+
+                // If the groupId starts with '$', generate a new one
+                if (groupId.startsWith("$")) {
+                  newGroupId = await document.generateId("groups", 4); // Generate new groupId
+                }
+
+                // Update all files in this group with the new groupId and individual file IDs
+                for (const file of files) {
+                  if (file.id.startsWith("$")) {
+                    const oldId = file.id;
+                    file.id = await document.generateId("files", 4); // Generate new fileId
+                    await document.uploadFile(file.id, tempFiles[oldId]);
+                  }
+                  file.groupId = newGroupId; // Assign the new groupId
+                  file.uploaded = Date.now(); // Set upload timestamp
+                }
+              }
+
+              // Upload the document if needed
               if (!document.get("id")) {
                 document.set("id", await document.generateId("documents", 4));
                 await document.upload();
               }
+
               setLoading(false);
             },
           },

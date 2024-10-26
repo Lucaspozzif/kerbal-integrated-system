@@ -27,10 +27,11 @@ export function DocsForm() {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      setMode(location.split("/")[1]);
+      setMode(location.pathname.split("/")[1]);
       if (id) {
         document.set("id", id, setter);
         await document.download();
+        setter(document);
       }
       setLoading(false);
     };
@@ -50,15 +51,18 @@ export function DocsForm() {
               <TextInput readOnly={true} size={0} value={document.get("id")} />
 
               <p className='ft-label'>Name:</p>
-              <TextInput readOnly={mode != "edit"} size={2} value={document.get("name")} onChange={(e) => document.set("name", e.target.value, setter)} />
+              <TextInput readOnly={mode == "display"} size={2} value={document.get("name")} onChange={(e) => document.set("name", e.target.value, setter)} />
 
               <p className='ft-label'>Long:</p>
-              <TextInput readOnly={mode != "edit"} size={3} value={document.get("long")} onChange={(e) => document.set("long", e.target.value, setter)} />
+              <TextInput readOnly={mode == "display"} size={3} value={document.get("long")} onChange={(e) => document.set("long", e.target.value, setter)} />
             </div>
           </div>
         );
 
       case "files":
+        if (!document.get("files")) {
+          document.set("files", [], setter);
+        }
         return (
           <div className='form-tab'>
             <div className='ft-sheet'>
@@ -94,7 +98,7 @@ export function DocsForm() {
                         setLoading(false);
                       }}
                     />
-                    {mode == "edit" && lastVersions.includes(file.id) ? (
+                    {mode != "display" && lastVersions.includes(file.id) ? (
                       <SheetButton
                         src={edit}
                         onClick={() => {
@@ -109,22 +113,22 @@ export function DocsForm() {
                   </div>
                 );
               })}
-              {mode == "edit" ? (
+              {mode != "display" ? (
                 <TextButton
                   title='add File'
                   onClick={() => {
-                    const tempGroup = `$${serverTimestamp()}`;
+                    const tempGroup = `$${Date.now()}`;
                     setTab("file-form");
                     setSelectedGroup(tempGroup);
                     setfileMode("edit");
                     const updatedFiles = document.get("files");
                     updatedFiles.push({
-                      id: `$${serverTimestamp()}`,
+                      id: `$${Date.now()}`,
                       groupId: tempGroup,
                       name: selectedGroup,
                       description: "",
                       version: "00",
-                      uploaded: "",
+                      uploaded: `${Date.now()}`,
                     });
 
                     document.set("files", updatedFiles, setter);
@@ -154,7 +158,7 @@ export function DocsForm() {
               <TextInput
                 readOnly={selectedGroup != "" || !selectedGroup.startsWith("$")}
                 size={2}
-                value={files[0].name}
+                value={files[0]?.name}
                 onChange={(e) => {
                   const updatedFiles = document.get("files").forEach((file: any) => {
                     if (file.group.startsWith("$")) file.name = e.target.value;
@@ -178,7 +182,7 @@ export function DocsForm() {
                     <TextInput readOnly={true} size={0} value={file.ver} />
                     <TextInput readOnly={true} size={2} value={file.uploaded} />
                     <TextInput
-                      readOnly={!file.id.startsWith("$")}
+                      readOnly={!file.id.startsWith("$") || mode == "display"}
                       size={3}
                       value={file.description}
                       onChange={(e) => {
@@ -206,7 +210,7 @@ export function DocsForm() {
                   </div>
                 );
               })}
-              {fileMode == "edit" && !document.get("files").some((file: any) => file.id.startsWith("$")) ? (
+              {fileMode != "display" ? (
                 <TextButton
                   title='add File'
                   onClick={() => {

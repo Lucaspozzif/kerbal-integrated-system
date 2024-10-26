@@ -72,12 +72,12 @@ export function MainHeader() {
           }}
         />
         <IconButton
-          selected={tab == "/norms"}
-          title='norms'
+          selected={tab == "/documents"}
+          title='docs'
           src={file}
           onClick={() => {
-            navigate("norms");
-            setTab("/norms");
+            navigate("documents");
+            setTab("/documents");
           }}
         />
         <IconButton

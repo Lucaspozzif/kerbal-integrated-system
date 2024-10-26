@@ -13,3 +13,4 @@ export const printIcon = require("./assets/print.png");
 export const padlock = require("./assets/padlock.png");
 export const importIcon = require("./assets/import.png");
 export const exportIcon = require("./assets/export.png");
+export const edit = require("./assets/edit.png");

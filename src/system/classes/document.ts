@@ -133,14 +133,19 @@ export class Document {
    *  @returns an array of IDs corresponding to the last version files
    */
   public lastVersionIds() {
-    const lastFilesMap = new Map<string, { id: string; uploaded: string }>();
+    if (!this.files) return [];
+    const lastFilesMap = new Map<string, { id: string; version: number }>();
 
     this.files.forEach((file) => {
-      if (!lastFilesMap.has(file.name) || new Date(file.uploaded) > new Date(lastFilesMap.get(file.name)!.uploaded)) {
-        lastFilesMap.set(file.name, { id: file.id, uploaded: file.uploaded });
+      const version = parseInt(file.version);
+
+      // If the group is new or the version is greater than the current one, update the map
+      if (!lastFilesMap.has(file.groupId) || version > lastFilesMap.get(file.groupId)!.version) {
+        lastFilesMap.set(file.groupId, { id: file.id, version });
       }
     });
 
+    // Extract the IDs from the map and return them
     return Array.from(lastFilesMap.values()).map((file) => file.id);
   }
 }

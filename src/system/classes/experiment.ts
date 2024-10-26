@@ -84,8 +84,8 @@ export class Crew {
   public async upload() {
     if (!this.id || this.id == "") return;
 
-    if (!this.created) this.created = serverTimestamp();
-    this.lastUpdated = serverTimestamp();
+    if (!this.created) this.created = Date.now();
+    this.lastUpdated = Date.now();
 
     const docRef = doc(db, "experiments", this.id);
     await setDoc(docRef, this.getAll());

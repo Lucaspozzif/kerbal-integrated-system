@@ -156,8 +156,8 @@ export class Mission {
   public async upload() {
     if (!this.id || this.id == "") return;
 
-    if (!this.created) this.created = serverTimestamp();
-    this.lastUpdate = serverTimestamp();
+    if (!this.created) this.created = Date.now();
+    this.lastUpdate = Date.now();
 
     const docRef = doc(db, "missions", this.id);
     await setDoc(docRef, this.getAll());

@@ -61,8 +61,8 @@ export class Database {
   public async upload() {
     if (!this.name || this.name == "") return;
 
-    if (!this.created) this.created = serverTimestamp();
-    this.lastUpdate = serverTimestamp();
+    if (!this.created) this.created = Date.now();
+    this.lastUpdate = Date.now();
 
     const docRef = doc(db, "databases", this.name);
     await setDoc(docRef, this.getAll());

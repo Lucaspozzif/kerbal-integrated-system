@@ -139,8 +139,8 @@ export class Module {
   public async upload() {
     if (!this.id || this.id == "") return;
 
-    if (!this.created) this.created = serverTimestamp();
-    this.lastUpdate = serverTimestamp();
+    if (!this.created) this.created = Date.now();
+    this.lastUpdate = Date.now();
 
     const docRef = doc(db, "modules", this.id);
     await setDoc(docRef, this.getAll());

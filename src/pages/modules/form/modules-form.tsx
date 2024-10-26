@@ -36,24 +36,6 @@ export function ModulesForm() {
             </div>
           </div>
         );
-      case "measures":
-        return (
-          <div className='form-tab'>
-            <div className='ft-inputs'>
-              <p className='ft-label'>Mass:</p>
-              <TextInput size={1} value={module.get("mass")} onChange={(e) => module.set("mass", e.target.value, setter)} />
-
-              <p className='ft-label'>Height:</p>
-              <TextInput size={1} value={module.get("height")} onChange={(e) => module.set("height", e.target.value, setter)} />
-
-              <p className='ft-label'>Width:</p>
-              <TextInput size={1} value={module.get("width")} onChange={(e) => module.set("width", e.target.value, setter)} />
-
-              <p className='ft-label'>Depth:</p>
-              <TextInput size={1} value={module.get("depth")} onChange={(e) => module.set("depth", e.target.value, setter)} />
-            </div>
-          </div>
-        );
       case "operations":
         console.log(module.get('dockingPorts'))
         return (

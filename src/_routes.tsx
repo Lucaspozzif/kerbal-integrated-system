@@ -16,5 +16,9 @@ export const routes = [
   { path: "/database/create", element: <DatabaseForm /> },
 
   { path: "/documents", element: <Docs /> },
-  { path: "/documents/create/:id", element: <DocsForm /> },
+  { path: "/documents/create/", element: <DocsForm /> },
+  { path: "/documents/edit/:id", element: <DocsForm /> },
+  { path: "/documents/display/:id", element: <DocsForm /> },
+  { path: "/documents/search/", element: <DocsForm /> },
+  { path: "/documents/delete/:id", element: <DocsForm /> },
 ];

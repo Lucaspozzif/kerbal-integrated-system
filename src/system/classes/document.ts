@@ -118,13 +118,53 @@ export class Document {
     return updatedId;
   }
 
-  public async downloadFile(fileId: string) {}
+  public async downloadFile(fileId: string) {
+    if (!fileId) return;
 
-  public async uploadFile(fileId: string) {}
+    const storageRef = ref(storage, `files/${fileId}`);
+    try {
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+      console.log("File available at", downloadURL);
 
-  public async exportFile(fileId: string) {}
-  
-  public async importFile(fileId: string) {}
+      // Initiate the download
+      const link = document.createElement("a");
+      link.href = downloadURL;
+      link.download = fileId; // You can set a specific filename if needed
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download failed", error);
+    }
+  }
+
+  public async uploadFile(fileId: string, file: File) {
+    if (!file) return;
+
+    const storageRef = ref(storage, `files/${fileId}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          console.error("Upload failed", error);
+          reject(error);
+        },
+        async () => {
+          // Get the download URL after a successful upload
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          console.log("File available at", downloadURL);
+          resolve(downloadURL);
+        }
+      );
+    });
+  }
 
   // Setters and Getters
   public get(attribute: "id" | "name" | "long" | "files" | "created" | "lastUpdate") {

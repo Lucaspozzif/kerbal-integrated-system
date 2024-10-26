@@ -80,13 +80,13 @@ export function DocsForm() {
                       className='fts-line'
                       onClick={() => {
                         setTab("file-form");
-                        setSelectedGroup(file.name);
+                        setSelectedGroup(file.groupId);
                         setfileMode("display");
                       }}
                     >
-                      <TextInput readOnly={true} size={0} value={file.id} />
+                      <TextInput readOnly={true} size={0} value={file.groupId} />
                       <TextInput readOnly={true} size={2} value={file.name} />
-                      <TextInput readOnly={true} size={0} value={file.ver} />
+                      <TextInput readOnly={true} size={0} value={file.version} />
                       <TextInput readOnly={true} size={2} value={file.uploaded} />
                       <TextInput readOnly={true} size={3} value={file.description} />
                     </div>
@@ -125,7 +125,7 @@ export function DocsForm() {
                     updatedFiles.push({
                       id: `$${Date.now()}`,
                       groupId: tempGroup,
-                      name: selectedGroup,
+                      name: "",
                       description: "",
                       version: "00",
                       uploaded: `${Date.now()}`,
@@ -142,11 +142,12 @@ export function DocsForm() {
         );
 
       case "file-form":
-        const files: any[] = document.get("files").filter((file: any) => file.group == selectedGroup);
-        const lastVersion: string = files
-          .reduce((max: any, file: any) => (parseInt(file.version) > parseInt(max.version) ? file : max), files[0])
-          .toString()
-          .startPad(2, "0");
+        const files: any[] = document.get("files").filter((file: any) => file.groupId === selectedGroup);
+        const lastVersion: string = [...files]
+          .sort((a: { version: string }, b: { version: string }) => parseInt(a.version) - parseInt(b.version))
+          .pop()
+          .version.toString()
+          .padStart(2, "0");
 
         return (
           <div className='form-tab'>
@@ -156,12 +157,13 @@ export function DocsForm() {
 
               <p className='ft-label'>Name:</p>
               <TextInput
-                readOnly={selectedGroup != "" || !selectedGroup.startsWith("$")}
+                readOnly={!selectedGroup.startsWith(`$`) || fileMode == "display"}
                 size={2}
                 value={files[0]?.name}
                 onChange={(e) => {
-                  const updatedFiles = document.get("files").forEach((file: any) => {
-                    if (file.group.startsWith("$")) file.name = e.target.value;
+                  const updatedFiles = document.get("files").map((file: any) => {
+                    if (file.groupId.startsWith("$")) file.name = e.target.value;
+                    return file;
                   });
                   document.set("files", updatedFiles, setter);
                 }}
@@ -179,7 +181,7 @@ export function DocsForm() {
                 return (
                   <div className='fts-line'>
                     <TextInput readOnly={true} size={0} value={file.id} />
-                    <TextInput readOnly={true} size={0} value={file.ver} />
+                    <TextInput readOnly={true} size={0} value={file.version} />
                     <TextInput readOnly={true} size={2} value={file.uploaded} />
                     <TextInput
                       readOnly={!file.id.startsWith("$") || mode == "display"}

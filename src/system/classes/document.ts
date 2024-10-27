@@ -45,6 +45,21 @@ export class Document {
     };
   }
 
+  private format() {
+    this.id = this.id;
+    this.name = this.name?.toLowerCase() || "";
+    this.long = this.long?.toLowerCase() || "";
+
+    this.files = this.files.map((file) => ({
+      id: file.id,
+      groupId: file.groupId,
+      name: file.name?.toLowerCase() || "",
+      description: file.description?.toLowerCase() || "",
+      version: file.version || "00",
+      uploaded: file.uploaded || null,
+    }));
+  }
+
   // Database Methods
   /**
    *

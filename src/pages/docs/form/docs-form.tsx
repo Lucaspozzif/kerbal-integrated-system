@@ -18,9 +18,11 @@ export function DocsForm() {
 
   const [selectedGroup, setSelectedGroup] = useState("");
   const [tempFiles, setTempFiles] = useState<any>({});
+  const [progress, setProgress] = useState<{ name: string; progress: number }>();
 
   const { id } = useParams();
-  const location: any = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetch = async () => {
@@ -308,7 +310,12 @@ export function DocsForm() {
                   if (file.id.startsWith("$")) {
                     const oldId = file.id;
                     file.id = await document.generateId("files", 4); // Generate new fileId
-                    await document.uploadFile(file.id, tempFiles[oldId]);
+                    await document.uploadFile(file.id, tempFiles[oldId], (progress) =>
+                      setProgress({
+                        name: file.name,
+                        progress: progress,
+                      })
+                    );
                   }
                   file.groupId = newGroupId; // Assign the new groupId
                   file.uploaded = Date.now(); // Set upload timestamp
@@ -328,7 +335,14 @@ export function DocsForm() {
         ]}
         text={""}
       />
-      {loading ? <Loading /> : tabHandler()}
+      {loading ? (
+        <div>
+          <p>{progress?.name}</p>
+          <p>Upload is {progress?.progress}% done</p>
+        </div>
+      ) : (
+        tabHandler()
+      )}
     </div>
   );
 }

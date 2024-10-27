@@ -91,3 +91,42 @@ form {
   padding: 3px;
   display: flex;
 }
+.blur{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--darkGray);
+}
+
+.popup{
+  position: relative;
+  height: 150px;
+  width: 400px;  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--gray);
+  border: 2px solid var(--black);
+}
+.textbox{
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-textbox{
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.exit-button{
+  position: absolute;
+  top: 3px;
+  right: 3px;
+}

@@ -34,9 +34,22 @@ export class Database {
   }
 
   // Database Methods
-  public async downloadInterval(from: any, to: any) {
+  /**
+   *
+   * @param from from X months since today
+   * @param to to X months since today
+   * @returns returns the array of documents in the interval
+   */
+  public async downloadInterval(from: number, to: number) {
+    const today = new Date();
+
+    const fromDate = new Date(today);
+    const toDate = new Date(today);
+    fromDate.setMonth(today.getMonth() - from);
+    toDate.setMonth(today.getMonth() - to);
+
     const col = collection(db, "databases");
-    const q = query(col, where("lastUpdate", ">", from), where("lastUpdate", "<", to));
+    const q = query(col, where("lastUpdate", "<", fromDate.getTime()), where("lastUpdate", ">", toDate.getTime()));
 
     const data: any[] = [];
     const querySnap = await getDocs(q);

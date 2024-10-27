@@ -7,14 +7,16 @@ import { useLocation } from "react-router-dom";
 type LocalHeaderType = {
   buttons: TextButtonType[];
   text: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export function LocalHeader({ buttons, text }: LocalHeaderType) {
+export function LocalHeader({ buttons, text, value, onChange }: LocalHeaderType) {
   const location = useLocation();
 
   return (
     <div className='local-header'>
-      <LocationBar value={location.pathname} />
+      <LocationBar value={value!== undefined ? value : location.pathname} onChange={onChange} />
       <div className='lh-button-bar'>
         {buttons.map((button) => {
           return <TextButton spaced={button.spaced} selected={button.selected} long={button.long} title={button.title} onClick={button.onClick} />;

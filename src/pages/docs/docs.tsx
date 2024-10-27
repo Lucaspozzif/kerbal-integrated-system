@@ -18,15 +18,16 @@ export function Docs() {
   const [results, setResults] = useState([]);
   const [search, setSearch] = useState("");
   const [safetyText, setSafetyText] = useState("");
+  
+  const selectedId = document.get("id");
 
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
       if (list.length < 1) {
         setList(await document.downloadInterval(tab * 3, tab * 3 + 3));
-
-        setLoading(false);
       }
+      setLoading(false);
     };
     fetch();
   });
@@ -211,7 +212,6 @@ export function Docs() {
     }
   };
 
-  const selectedId = document.get("id");
   return (
     <div className='page'>
       {popupHandler()}

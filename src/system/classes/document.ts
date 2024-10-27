@@ -1,4 +1,4 @@
-import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, endAt, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, startAt, where } from "firebase/firestore";
 import { db, storage } from "../firebase/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -118,6 +118,7 @@ export class Document {
     if (!docSnap.data()) return;
 
     this.populate(docSnap.data());
+    this.format();
     this.id = docSnap.id;
   }
 
@@ -127,6 +128,7 @@ export class Document {
     if (!this.created) this.created = Date.now();
     this.lastUpdate = Date.now();
     const docRef = doc(db, "documents", this.id);
+    this.format();
     await setDoc(docRef, this.getAll());
   }
 
@@ -175,7 +177,7 @@ export class Document {
     }
   }
 
-  public async uploadFile(fileId: string, file: File) {
+  public async uploadFile(fileId: string, file: File, onProgress: (progress: number) => void) {
     if (!file) return;
 
     const storageRef = ref(storage, `files/${fileId}`);
@@ -186,7 +188,7 @@ export class Document {
         "state_changed",
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(`Upload is ${progress}% done`);
+          onProgress(progress);
         },
         (error) => {
           console.error("Upload failed", error);

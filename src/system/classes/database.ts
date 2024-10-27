@@ -4,8 +4,9 @@ import { db } from "../firebase/firebase";
 export class Database {
   private name: string;
   private data: {
-    [id: string]: string;
-  };
+    id: string;
+    value: string;
+  }[];
   private created: any;
   private lastUpdate: any;
 

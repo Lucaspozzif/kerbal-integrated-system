@@ -58,6 +58,28 @@ export class Database {
       snap.set("name", doc.id);
       data.push(snap);
     });
+
+    return data;
+  }
+
+  public async downloadSearch(search: string) {
+    const formattedSearch = search.toLowerCase();
+    const col = collection(db, "databases");
+    const q = query(col, orderBy("name"), startAt(formattedSearch), endAt(formattedSearch + "\uf8ff"));
+    const data: any[] = [];
+
+    try {
+      const querySnap = await getDocs(q);
+      querySnap.forEach((doc) => {
+        const snap = new Database(doc.data());
+        snap.set("name", doc.id);
+        data.push(snap);
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error searching by partial name:", error);
+    }
   }
 
   public async download(name?: string) {

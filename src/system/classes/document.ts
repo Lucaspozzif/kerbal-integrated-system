@@ -89,6 +89,26 @@ export class Document {
     return data;
   }
 
+  public async downloadSearch(search: string) {
+    const formattedSearch = search.toLowerCase();
+    const col = collection(db, "documents");
+    const q = query(col, orderBy("name"), startAt(formattedSearch), endAt(formattedSearch + "\uf8ff"));
+    const data: any[] = [];
+
+    try {
+      const querySnap = await getDocs(q);
+      querySnap.forEach((doc) => {
+        const snap = new Document(doc.data());
+        snap.set("id", doc.id);
+        data.push(snap);
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Error searching by partial name:", error);
+    }
+  }
+
   public async download(id?: string) {
     const downloadId = id || this.id;
     if (!downloadId || downloadId == "") return;

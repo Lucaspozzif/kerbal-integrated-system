@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { LocalHeader } from "../../../components/local-header/local-header";
 import { TextInput } from "../../../components/text-input/text-input";
 import { exportIcon, edit, importIcon } from "../../../_global";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { SheetButton } from "../../../components/sheet-button/sheet-button";
 import { TextButton } from "../../../components/text-button/text-button";
 import { Loading } from "../../../components/loading/loading";
@@ -25,7 +25,7 @@ export function DocsForm() {
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      setMode(location.pathname.split("/")[1]);
+      setMode(location.pathname.split("/")[2]);
       if (id) {
         document.set("id", id, setter);
         await document.download();
@@ -79,7 +79,7 @@ export function DocsForm() {
                       onClick={() => {
                         setTab("file-form");
                         setSelectedGroup(file.groupId);
-                        setfileMode("display");
+                        setfileMode(mode);
                       }}
                     >
                       <TextInput readOnly={true} size={0} value={file.groupId} />
@@ -318,10 +318,11 @@ export function DocsForm() {
               // Upload the document if needed
               if (!document.get("id")) {
                 document.set("id", await document.generateId("documents", 4));
-                await document.upload();
               }
+              await document.upload();
 
               setLoading(false);
+              navigate(-1);
             },
           },
         ]}

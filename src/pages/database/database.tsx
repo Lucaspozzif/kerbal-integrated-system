@@ -94,8 +94,8 @@ export function Database() {
                   <TextInput readOnly={true} size={2} value='Name' />
                   <TextInput readOnly={true} size={1} value='Uploaded On' />
                 </div>
-                {results.map((file) => {
-                  const date = new Date(file.created);
+                {results.map((file:Db) => {
+                  const date = new Date(file.get("created"));
 
                   // Get day, month, and year
                   const day = String(date.getDate()).padStart(2, "0"); // Ensure two digits
@@ -105,15 +105,15 @@ export function Database() {
                     <div
                       className='fts-line'
                       onClick={() => {
-                        if (file.name == database.get("name")) {
+                        if (file.get("name") == database.get("name")) {
                           setter(new Db());
                         } else {
-                          setter(new Db(file));
+                          setter(file);
                         }
                       }}
                     >
-                      <TextInput selected={file.name == database.get("name")} readOnly={true} size={2} value={file.name} />
-                      <TextInput selected={file.name == database.get("name")} readOnly={true} size={1} value={`${day}-${month}-${year}`} />
+                      <TextInput selected={file.get("name") == database.get("name")} readOnly={true} size={2} value={file.get("name")} />
+                      <TextInput selected={file.get("name") == database.get("name")} readOnly={true} size={1} value={`${day}-${month}-${year}`} />
                     </div>
                   );
                 })}
@@ -243,8 +243,8 @@ export function Database() {
           <TextInput readOnly={true} size={2} value='Name' />
           <TextInput readOnly={true} size={1} value='Uploaded On' />
         </div>
-        {list.map((file) => {
-          const date = new Date(file.created);
+        {list.map((file:Db) => {
+          const date = new Date(file.get('created'));
 
           // Get day, month, and year
           const day = String(date.getDate()).padStart(2, "0"); // Ensure two digits
@@ -254,15 +254,16 @@ export function Database() {
             <div
               className='fts-line'
               onClick={() => {
-                if (file.id == database.get("name")) {
+                if (file.get('name') == database.get("name")) {
                   setter(new Db());
                 } else {
-                  setter(new Db(file));
+                  setter(file);
                 }
+                console.log(file, database)
               }}
             >
-              <TextInput selected={file.name == database.get("name")} readOnly={true} size={2} value={file.name} />
-              <TextInput selected={file.name == database.get("name")} readOnly={true} size={1} value={`${day}-${month}-${year}`} />
+              <TextInput selected={file.get('name') == database.get("name")} readOnly={true} size={2} value={file.get('name')} />
+              <TextInput selected={file.get('name') == database.get("name")} readOnly={true} size={1} value={`${day}-${month}-${year}`} />
             </div>
           );
         })}

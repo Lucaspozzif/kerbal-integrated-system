@@ -37,7 +37,7 @@ export function DatabaseForm() {
     database.set("data", [], setter);
   }
   return (
-    <div className='page'>
+    <div className="page">
       <LocalHeader
         buttons={[
           {
@@ -58,11 +58,19 @@ export function DatabaseForm() {
           },
           {
             long: true,
-            selected: !database.get("name") || database.get("name") == "",
+            selected:
+              !database.get("name") ||
+              database.get("name") == "" ||
+              mode == "display",
             title: "Save",
+            spaced: true,
             onClick: async () => {
               setLoading(true);
-              if (!database.get("name") || database.get("name") == "") {
+              if (
+                !database.get("name") ||
+                database.get("name") == "" ||
+                mode == "display"
+              ) {
                 return;
               }
 
@@ -74,7 +82,10 @@ export function DatabaseForm() {
               // Update all files in this group with the new groupId and individual file IDs
               for (const item of data) {
                 if (item.id.startsWith("$")) {
-                  item.id = await database.generateId(`db-${database.get("name")}`, 2); // Generate new fileId
+                  item.id = await database.generateId(
+                    `db-${database.get("name")}`,
+                    2
+                  ); // Generate new fileId
                 }
               }
 
@@ -84,31 +95,38 @@ export function DatabaseForm() {
               navigate(-1);
             },
           },
+          {
+            long: true,
+            title: "Cancel",
+            onClick: () => {
+              navigate(-1);
+            },
+          },
         ]}
         text={""}
       />
-      <div className='form-tab'>
-        <div className='ft-inputs'>
-          <p className='ft-label'>Name:</p>
+      <div className="form-tab">
+        <div className="ft-inputs">
+          <p className="ft-label">Name:</p>
           <TextInput
             readOnly={database.get("created")}
             size={2}
             value={database.get("name")}
             onChange={(e) => {
-              if (database.get("created")) {
+              if (!database.get("created")) {
                 database.set("name", e.target.value, setter);
               }
             }}
           />
         </div>
-        <div className='ft-sheet'>
-          <div className='fts-line'>
-            <TextInput readOnly={true} size={0} value='Id' />
-            <TextInput readOnly={true} size={2} value='Value' />
+        <div className="ft-sheet">
+          <div className="fts-line">
+            <TextInput readOnly={true} size={0} value="Id" />
+            <TextInput readOnly={true} size={2} value="Value" />
           </div>
           {database.get("data").map((item: any, index: number) => {
             return (
-              <div className='fts-line'>
+              <div className="fts-line">
                 <TextInput readOnly={true} size={0} value={item.id} />
                 <TextInput
                   readOnly={mode == "display"}
@@ -116,7 +134,9 @@ export function DatabaseForm() {
                   value={item.value}
                   onChange={(e) => {
                     // Find the index of the file with the matching ID
-                    const index = database.get("data").findIndex((fileIn: any) => fileIn.id === item.id);
+                    const index = database
+                      .get("data")
+                      .findIndex((fileIn: any) => fileIn.id === item.id);
 
                     if (index !== -1) {
                       // Update the description of the matched file
@@ -128,30 +148,40 @@ export function DatabaseForm() {
                     }
                   }}
                 />
-                <SheetButton
-                  src={trash}
-                  onClick={() => {
-                    const updatedData = [...database.get("data")].filter((_, i) => {
-                      return i !== index;
-                    });
+                {mode == "display" ? (
+                  <></>
+                ) : (
+                  <SheetButton
+                    src={trash}
+                    onClick={() => {
+                      const updatedData = [...database.get("data")].filter(
+                        (_, i) => {
+                          return i !== index;
+                        }
+                      );
 
-                    database.set("data", updatedData, setter);
-                  }}
-                />
+                      database.set("data", updatedData, setter);
+                    }}
+                  />
+                )}
               </div>
             );
           })}
-          <TextButton
-            title='add Item'
-            onClick={() => {
-              const updatedData = [...database.get("data")];
-              updatedData.push({
-                id: `$${Date.now()}`,
-                value: "",
-              });
-              database.set("data", updatedData, setter);
-            }}
-          />
+          {mode == "display" ? (
+            <></>
+          ) : (
+            <TextButton
+              title="add Item"
+              onClick={() => {
+                const updatedData = [...database.get("data")];
+                updatedData.push({
+                  id: `$${Date.now()}`,
+                  value: "",
+                });
+                database.set("data", updatedData, setter);
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

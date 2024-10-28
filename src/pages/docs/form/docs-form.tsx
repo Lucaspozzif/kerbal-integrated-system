@@ -332,6 +332,14 @@ export function DocsForm() {
               navigate(-1);
             },
           },
+          {
+            long: true,
+            spaced: true,
+            title: "Cancel",
+            onClick: () => {
+              navigate(-1);
+            },
+          },
         ]}
         text={""}
       />

@@ -1,12 +1,28 @@
-# Todo list
+# KerbWeb
 
-How to use: add pendencies to the bottom, resolve the pendencies on the top, they are separated by importance.
+Kerbweb foi desenvolvido com o propósito de organizar as nuâncias relacionadas as missões de KSP. 
 
-## Priority
+Atualmente em desenvolvimento, o lançamento da versão alpha é prevista em poucas semanas, as seguintes funcionalidades estão em andamento:
 
-## Normal
+## Funcionalidades:
 
-- Make the list thingy
-- Start Docs page development
-- Fill minor databases
-- Finnish Modules Page
+- Gerenciamento de documentos:
+    - Completo
+
+- Gerenciamento de experimentos científicos
+    - Em andamento
+
+- Gerenciamento de pessoal
+
+- Gerenciamento de módulos
+
+- Gerenciamento de missões
+
+### Funcionalidades menores
+
+- Exportar e importar:
+
+- Imprimir:
+
+- Bancos de dados menores
+    - Completo

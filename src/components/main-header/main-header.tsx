@@ -11,17 +11,30 @@ export function MainHeader() {
   const location = useLocation();
 
   return (
-    <div className='main-header'>
-      <div className='mh-nav-button-list'>
-        <IconButton reversed={true} title='back' src={pointer} onClick={() => {}} />
-        <IconButton title='forward' src={pointer} onClick={() => {}} />
+    <div className="main-header">
+      <div className="mh-nav-button-list">
         <IconButton
-          selected={location.pathname == "/main_window"}
-          title='home'
+          reversed={true}
+          title="back"
+          src={pointer}
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
+        <IconButton
+          title="forward"
+          src={pointer}
+          onClick={() => {
+            navigate(1);
+          }}
+        />
+        <IconButton
+          selected={tab == "/"}
+          title="home"
           src={home}
           onClick={() => {
-            navigate("main_window");
-            setTab("main_window");
+            navigate("/");
+            setTab("/");
           }}
         />
       </div>
@@ -87,17 +100,6 @@ export function MainHeader() {
           onClick={() => {
             navigate("database");
             setTab("/database");
-          }}
-        />
-      </div>
-      <div className='mh-nav-button-list'>
-        <IconButton
-          selected={location.pathname == "/profile"}
-          title='profile'
-          src={profile}
-          onClick={() => {
-            navigate("profile");
-            setTab("/profile");
           }}
         />
       </div>

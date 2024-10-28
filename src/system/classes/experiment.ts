@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
-export class Crew {
+export class Experiment {
   // Basic Data
   private id: string;
   private name: string;
@@ -63,7 +63,7 @@ export class Crew {
     const data: any[] = [];
     const querySnap = await getDocs(q);
     querySnap.forEach((doc) => {
-      const snap = new Crew(doc.data());
+      const snap = new Experiment(doc.data());
       snap.set("id", doc.id);
       data.push(snap);
     });
@@ -120,8 +120,8 @@ export class Crew {
     return (this as any)[attribute];
   }
 
-  public set(attribute: "id" | "name" | "landed" | "splashed" | "flyingLow" | "flyingHigh" | "spaceLow" | "spaceHigh" | "completed", newValue: any, setter?: React.Dispatch<React.SetStateAction<Crew>>) {
+  public set(attribute: "id" | "name" | "landed" | "splashed" | "flyingLow" | "flyingHigh" | "spaceLow" | "spaceHigh" | "completed", newValue: any, setter?: React.Dispatch<React.SetStateAction<Experiment>>) {
     (this as any)[attribute] = newValue;
-    if (setter) setter(new Crew(this.getAll()));
+    if (setter) setter(new Experiment(this.getAll()));
   }
 }

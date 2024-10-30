@@ -13,8 +13,8 @@ if (require("electron-squirrel-startup")) {
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 540,
-    width: 960,
+    height: 720,
+    width: 1280,
     resizable: false,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -26,7 +26,7 @@ const createWindow = (): void => {
 
   // Define o zoom inicial para 200%
   mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow.webContents.setZoomFactor(1.9); // 2.0 representa 200%
+    mainWindow.webContents.setZoomFactor(2); // 2.0 representa 200%
   });
 
   // Open the DevTools.

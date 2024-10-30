@@ -130,3 +130,9 @@ form {
   top: 3px;
   right: 3px;
 }
+.checkbox-list{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 3px;
+}

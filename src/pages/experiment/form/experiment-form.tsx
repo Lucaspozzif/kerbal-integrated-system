@@ -32,8 +32,77 @@ export function ExperimentForm() {
     fetch();
   }, []);
 
+  const tabHandler = () => {
+    switch (tab) {
+      case "basic-data":
+        return (
+          <div className='form-tab'>
+            <div className='ft-inputs'>
+              <p className='ft-label'>Id:</p>
+              <TextInput readOnly={true} size={0} value={experiment.get("id")} />
+
+              <p className='ft-label'>Name:</p>
+              <TextInput readOnly={mode == "display"} size={2} value={experiment.get("name")} onChange={(e) => experiment.set("name", e.target.value, setter)} />
+            </div>
+            <div className='checkbox-list'>
+              <p className='title'>Can the experiment run on multiple biomes?</p>
+              <CheckBox
+                selected={experiment.get("landed")}
+                title='Landed'
+                onClick={() => {
+                  experiment.set("landed", !experiment.get("landed"), setter);
+                }}
+              />
+              <CheckBox
+                selected={experiment.get("splashed")}
+                title='Splashed'
+                onClick={() => {
+                  experiment.set("splashed", !experiment.get("splashed"), setter);
+                }}
+              />
+              <CheckBox
+                selected={experiment.get("flyingLow")}
+                title='Flying Low'
+                onClick={() => {
+                  experiment.set("flyingLow", !experiment.get("flyingLow"), setter);
+                }}
+              />
+              <CheckBox
+                selected={experiment.get("flyingHigh")}
+                title='Flying High'
+                onClick={() => {
+                  experiment.set("flyingHigh", !experiment.get("flyingHigh"), setter);
+                }}
+              />
+              <CheckBox
+                selected={experiment.get("spaceLow")}
+                title='Space Low'
+                onClick={() => {
+                  experiment.set("spaceLow", !experiment.get("spaceLow"), setter);
+                }}
+              />
+              <CheckBox
+                selected={experiment.get("spaceHigh")}
+                title='Space High'
+                onClick={() => {
+                  experiment.set("spaceHigh", !experiment.get("spaceHigh"), setter);
+                }}
+              />
+            </div>
+          </div>
+        );
+      case "register":
+        return <div className='form-tab'>
+          
+        </div>;
+
+      default:
+        break;
+    }
+  };
+
   return (
-    <div className="page">
+    <div className='page'>
       <LocalHeader
         buttons={[
           {
@@ -41,6 +110,12 @@ export function ExperimentForm() {
             selected: tab == "basic-data",
             title: "Basic Data",
             onClick: () => setTab("basic-data"),
+          },
+          {
+            long: true,
+            selected: tab == "register",
+            title: "Register",
+            onClick: () => setTab("register"),
           },
           {
             long: true,
@@ -58,83 +133,9 @@ export function ExperimentForm() {
             },
           },
         ]}
-        text=""
+        text=''
       />
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className="form-tab">
-          <div className="ft-inputs">
-            <p className="ft-label">Id:</p>
-            <TextInput readOnly={true} size={0} value={experiment.get("id")} />
-
-            <p className="ft-label">Name:</p>
-            <TextInput
-              readOnly={mode == "display"}
-              size={2}
-              value={experiment.get("name")}
-              onChange={(e) => experiment.set("name", e.target.value, setter)}
-            />
-          </div>
-          <div className="checkbox list">
-            <p className="title">Can the experiment run on multiple biomes?</p>
-            <CheckBox
-              selected={experiment.get("landed")}
-              title="Landed"
-              onClick={() => {
-                experiment.set("landed", !experiment.get("landed"), setter);
-              }}
-            />
-            <CheckBox
-              selected={experiment.get("splashed")}
-              title="Splashed"
-              onClick={() => {
-                experiment.set("splashed", !experiment.get("splashed"), setter);
-              }}
-            />
-            <CheckBox
-              selected={experiment.get("flyingLow")}
-              title="Flying Low"
-              onClick={() => {
-                experiment.set(
-                  "flyingLow",
-                  !experiment.get("flyingLow"),
-                  setter
-                );
-              }}
-            />
-            <CheckBox
-              selected={experiment.get("flyingHigh")}
-              title="Flying High"
-              onClick={() => {
-                experiment.set(
-                  "flyingHigh",
-                  !experiment.get("flyingHigh"),
-                  setter
-                );
-              }}
-            />
-            <CheckBox
-              selected={experiment.get("spaceLow")}
-              title="Space Low"
-              onClick={() => {
-                experiment.set("spaceLow", !experiment.get("spaceLow"), setter);
-              }}
-            />
-            <CheckBox
-              selected={experiment.get("spaceHigh")}
-              title="Space High"
-              onClick={() => {
-                experiment.set(
-                  "spaceHigh",
-                  !experiment.get("spaceHigh"),
-                  setter
-                );
-              }}
-            />
-          </div>
-        </div>
-      )}
+      {loading ? <Loading /> : tabHandler()}
     </div>
   );
 }

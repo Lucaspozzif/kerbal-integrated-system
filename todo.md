@@ -10,7 +10,7 @@ Atualmente em desenvolvimento, o lançamento da versão alpha é prevista em pou
     - Completo
 
 - Gerenciamento de experimentos científicos
-    - Em andamento
+    - Gerenciamento de planetas
 
 - Gerenciamento de pessoal
 

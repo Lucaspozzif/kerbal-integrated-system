@@ -136,3 +136,8 @@ form {
   gap: 3px;
   padding: 3px;
 }
+.gap-div{
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}

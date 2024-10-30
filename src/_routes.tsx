@@ -1,3 +1,5 @@
+import { CelestialBody } from "./pages/celestial-body/celestial-body";
+import { CelestialBodyForm } from "./pages/celestial-body/form/celestial-body-form";
 import { Database } from "./pages/database/database";
 import { DatabaseForm } from "./pages/database/form/database-form";
 import { Docs } from "./pages/docs/docs";
@@ -25,4 +27,9 @@ export const routes = [
   { path: "science/create", element: <ExperimentForm /> },
   { path: "science/edit/:id", element: <ExperimentForm /> },
   { path: "science/display/:id", element: <ExperimentForm /> },
+
+  { path: "celestial-body", element: <CelestialBody /> },
+  { path: "celestial-body/create", element: <CelestialBodyForm /> },
+  { path: "celestial-body/edit/:id", element: <CelestialBodyForm /> },
+  { path: "celestial-body/display/:id", element: <CelestialBodyForm /> },
 ];

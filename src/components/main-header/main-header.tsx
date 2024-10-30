@@ -85,6 +85,15 @@ export function MainHeader() {
           }}
         />
         <IconButton
+          selected={tab == "/celestial-body"}
+          title="planets"
+          src={flask}
+          onClick={() => {
+            navigate("celestial-body");
+            setTab("/celestial-body");
+          }}
+        />
+        <IconButton
           selected={tab == "/documents"}
           title='docs'
           src={file}

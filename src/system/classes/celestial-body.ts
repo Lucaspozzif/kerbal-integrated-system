@@ -17,7 +17,11 @@ export class CelestialBody {
   private id: string;
   private name: string;
   private hasAtmosphere: boolean;
-  private biomes: string[];
+  private hasLand: boolean;
+  private biomes: {
+    id: string;
+    name: string;
+  }[];
 
   private created: any;
   private lastUpdate: any;
@@ -33,6 +37,7 @@ export class CelestialBody {
     this.id = data.id;
     this.name = data.name;
     this.hasAtmosphere = data.hasAtmosphere;
+    this.hasLand = data.hasLand;
     this.biomes = data.biomes;
     this.created = data.created;
     this.lastUpdate = data.lastUpdate;
@@ -43,6 +48,7 @@ export class CelestialBody {
       id: this.id,
       name: this.name,
       hasAtmosphere: this.hasAtmosphere,
+      hasLand: this.hasLand,
       biomes: this.biomes,
       created: this.created,
       lastUpdate: this.lastUpdate,
@@ -52,7 +58,11 @@ export class CelestialBody {
   private format() {
     this.id = this.id;
     this.name = this.name?.toLowerCase() || "";
-    this.biomes = this.biomes.map((biome) => biome.toLowerCase() || "");
+
+    this.biomes = this.biomes.map((biome) => ({
+      id: biome.id,
+      name: biome.name.toLowerCase() || "",
+    }));
   }
 
   // Database Methods
@@ -167,6 +177,7 @@ export class CelestialBody {
     attribute:
       | "id"
       | "name"
+      | "hasLand"
       | "hasAtmosphere"
       | "biomes"
       | "created"
@@ -176,7 +187,7 @@ export class CelestialBody {
   }
 
   public set(
-    attribute: "id" | "name" | "hasAtmosphere" | "biomes",
+    attribute: "id" | "name" | "hasLand" | "hasAtmosphere" | "biomes",
     newValue: any,
     setter?: React.Dispatch<React.SetStateAction<CelestialBody>>
   ) {

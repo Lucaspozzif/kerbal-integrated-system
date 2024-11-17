@@ -1,0 +1,19 @@
+.checkbox{
+    display: flex;
+}
+.checkbox-checker {
+  height: 6px;
+  width: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--black);
+  background: var(--white);
+  box-shadow: inset 1px 1px 0px 0px var(--darkGray);
+  margin-right: 3px;
+}
+.cc-dot.selected{
+    height: 4px;
+    width: 4px;
+    background-color: var(--black);
+}
